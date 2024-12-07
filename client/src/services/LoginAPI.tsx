@@ -9,8 +9,7 @@ const getLoginUrl = async() => {
             throw new Error('Network error');
         }
         const data = await response.json();
-        console.log(data.url);
-        return data.url.targetUrl;
+        return data.url;
     }
     catch (err){
         console.error('Error: ');
@@ -31,7 +30,6 @@ const getAccessToken = async(code: AuthorizationCodeParams) => {
             throw new Error('Network error');
         }
         const data = await response.json();
-        console.log(data);
         return data;
     }
     catch (err){
@@ -40,5 +38,21 @@ const getAccessToken = async(code: AuthorizationCodeParams) => {
     }
 }
 
+const logOut = async () => {
+    try {
+        const response = await fetch('/api/logout', { method: 'DELETE' })
+        if (!response.ok){
+            throw new Error('Error logging out')
+        }
+        const data = await response.json();
+        window.location.href='/';        
+    }
+    
+    catch (err){
+        console.error('Error: ');
+        throw err;
+    }
+}
 
-export default { getLoginUrl, getAccessToken }
+
+export default { getLoginUrl, getAccessToken, logOut }

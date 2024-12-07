@@ -1,6 +1,11 @@
-const getUserProfile = async (access_token: string) => {
+const getUserProfile = async () => {
     try{
-        const response = await fetch(`/api/profile/${access_token}`);
+        const response = await fetch('/api/profile');
+        if (response.status === 401){
+            return response.json().then(() => {
+                window.location.href = '/';
+            })
+        }
         if (!response.ok){
             throw new Error('Network error');
         }

@@ -1,15 +1,9 @@
 import { useEffect, useState } from "react";
 import ProfileAPI from "../services/ProfileAPI";
+import LoginAPI from "../services/LoginAPI";
 
 const UserPage = () => {
     const urlParams = new URLSearchParams(window.location.search);
-
-    let accessToken = urlParams.get('access_token') || '';
-    if (accessToken) {
-        localStorage.setItem('access_token', accessToken);
-    } else {
-        accessToken = localStorage.getItem('access_token') || '';
-    }
 
     interface ProfileData {
         images: { url: string }[];
@@ -21,9 +15,8 @@ const UserPage = () => {
     useEffect(() => {
         const getProfileData = async () => {
             try{
-                const data = await ProfileAPI.getUserProfile(accessToken);
+                const data = await ProfileAPI.getUserProfile();
                 setProfileData(data);
-                console.log(profileData)
             } catch (err){
                 console.error('Error fetching token');
             }
@@ -31,6 +24,9 @@ const UserPage = () => {
         getProfileData();
     }, [])
 
+    const handleLogout = async () => {
+        const res = await LoginAPI.logOut();
+    }
     
 
             
@@ -39,8 +35,11 @@ const UserPage = () => {
         <>
             {profileData && (
                 <>
+
                     <img src={profileData.images[0].url} />
                     <p>Welcome! {profileData.display_name}</p>
+
+                    <button onClick={handleLogout}>Logout</button>
                 </>
             )}
         </>
